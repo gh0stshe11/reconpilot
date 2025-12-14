@@ -165,18 +165,21 @@ class Orchestrator:
 
     def _create_initial_task(self) -> Task:
         """Create the initial task based on target"""
+        from reconpilot.utils.helpers import is_valid_ip, is_valid_url
+        
         target = self.config.target
         
-        # Determine if target is domain, IP, or URL
-        if target.startswith("http://") or target.startswith("https://"):
+        # Determine if target is URL, IP, or domain
+        if is_valid_url(target):
             tool_name = "httpx"
             description = f"Probe HTTP service: {target}"
-        elif "." in target and not target.replace(".", "").isdigit():
-            tool_name = "subfinder"
-            description = f"Find subdomains for: {target}"
-        else:
+        elif is_valid_ip(target):
             tool_name = "nmap"
             description = f"Port scan: {target}"
+        else:
+            # Assume domain
+            tool_name = "subfinder"
+            description = f"Find subdomains for: {target}"
 
         return Task(
             name=tool_name,

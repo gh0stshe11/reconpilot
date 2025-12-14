@@ -15,7 +15,7 @@ RESET = '\033[0m'
 TOOLS = [
     # DNS/OSINT
     ("whois", "whois", "apt install whois"),
-    ("dnsrecon", "dnsrecon", "apt install dnsrecon"),
+    ("dnsrecon", "dnsrecon", "pip install dnsrecon"),
     ("dnsx", "dnsx", "go install github.com/projectdiscovery/dnsx/cmd/dnsx@latest"),
     
     # Subdomain enumeration

@@ -6,7 +6,11 @@ from reconpilot.tools.base import ToolAdapter, ToolCategory, ToolConfig, ToolRes
 
 
 class MasscanAdapter(ToolAdapter):
-    """Adapter for masscan tool"""
+    """Adapter for masscan tool
+    
+    Note: Masscan requires root privileges to run. Ensure you have
+    appropriate permissions and understand the security implications.
+    """
 
     def __init__(self):
         config = ToolConfig(

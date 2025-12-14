@@ -37,7 +37,7 @@ class Severity(Enum):
 
     @property
     def icon(self) -> str:
-        """Get icon for severity"""
+        """Get emoji icon for severity"""
         icons = {
             Severity.CRITICAL: "🔴",
             Severity.HIGH: "🟠",

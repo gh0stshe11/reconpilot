@@ -28,7 +28,7 @@ class HttpxAdapter(ToolAdapter):
             "-status-code",
             "-tech-detect",
             "-title",
-            "-host", target,
+            "-u", target,
         ]
 
     def parse_output(self, output: str) -> ToolResult:
