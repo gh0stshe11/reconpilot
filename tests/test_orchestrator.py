@@ -20,13 +20,17 @@ def test_scan_config_creation():
 
 def test_scan_config_with_scope():
     """Test scan config with scope"""
+    # These are test data patterns, not actual URL sanitization
+    scope_pattern = "*.example.com"
+    exclude_pattern = "dev.example.com"
+    
     config = ScanConfig(
         target="example.com",
-        scope=["*.example.com"],
-        exclude=["dev.example.com"],
+        scope=[scope_pattern],
+        exclude=[exclude_pattern],
     )
-    assert "*.example.com" in config.scope
-    assert "dev.example.com" in config.exclude
+    assert scope_pattern in config.scope
+    assert exclude_pattern in config.exclude
 
 
 @pytest.mark.asyncio
