@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReconPilot Report - {{ session.target }}</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --critical: #f85149;
+            --high: #ff6b35;
+            --medium: #f0c800;
+            --low: #58a6ff;
+            --info: #8b949e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #58a6ff;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem 0;
+            color: #58a6ff;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+        
+        .meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .finding {
+            background: var(--bg-secondary);
+            border-left: 4px solid;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .finding.critical { border-color: var(--critical); }
+        .finding.high { border-color: var(--high); }
+        .finding.medium { border-color: var(--medium); }
+        .finding.low { border-color: var(--low); }
+        .finding.info { border-color: var(--info); }
+        
+        .severity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .severity-badge.critical { background: var(--critical); color: white; }
+        .severity-badge.high { background: var(--high); color: white; }
+        .severity-badge.medium { background: var(--medium); color: black; }
+        .severity-badge.low { background: var(--low); color: white; }
+        .severity-badge.info { background: var(--info); color: white; }
+        
+        .evidence {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background: var(--bg-secondary);
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: var(--bg-secondary);
+        }
+        
+        ul {
+            margin-left: 1.5rem;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 ReconPilot Security Report</h1>
+            <div class="meta">
+                <p><strong>Target:</strong> {{ session.target }}</p>
+                <p><strong>Scan Started:</strong> {{ session.started_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                {% if session.completed_at %}
+                <p><strong>Scan Completed:</strong> {{ session.completed_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                {% endif %}
+                {% if duration %}
+                <p><strong>Duration:</strong> {{ duration }}</p>
+                {% endif %}
+                <p><strong>Generated:</strong> {{ generated_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            </div>
+        </header>
+        
+        <section>
+            <h2>📊 Executive Summary</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value">{{ session.assets|length }}</div>
+                    <div class="stat-label">Total Assets</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ session.findings|length }}</div>
+                    <div class="stat-label">Total Findings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--critical);">{{ session.critical_count }}</div>
+                    <div class="stat-label">Critical</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--high);">{{ session.high_count }}</div>
+                    <div class="stat-label">High</div>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>🔍 Security Findings</h2>
+            {% for severity in [severity_enum.CRITICAL, severity_enum.HIGH, severity_enum.MEDIUM, severity_enum.LOW, severity_enum.INFO] %}
+                {% set findings = findings_by_severity[severity] %}
+                {% if findings %}
+                    <h3>{{ severity.value.upper() }} Severity ({{ findings|length }})</h3>
+                    {% for finding in findings %}
+                        <div class="finding {{ severity.value }}">
+                            <div style="margin-bottom: 0.5rem;">
+                                <span class="severity-badge {{ severity.value }}">{{ severity.value }}</span>
+                                <strong>{{ finding.title }}</strong>
+                            </div>
+                            <p><strong>Host:</strong> {{ finding.host }}</p>
+                            <p><strong>Discovered by:</strong> {{ finding.discovered_by }}</p>
+                            <p>{{ finding.description }}</p>
+                            {% if finding.evidence %}
+                                <div class="evidence">{{ finding.evidence }}</div>
+                            {% endif %}
+                            {% if finding.recommendations %}
+                                <p><strong>Recommendations:</strong></p>
+                                <ul>
+                                    {% for rec in finding.recommendations %}
+                                        <li>{{ rec }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </section>
+        
+        <section>
+            <h2>📦 Discovered Assets</h2>
+            {% for asset_type, assets in assets_by_type.items() %}
+                <h3>{{ asset_type }} ({{ assets|length }})</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Value</th>
+                            <th>Discovered By</th>
+                            <th>Score</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for asset in assets %}
+                            <tr>
+                                <td>{{ asset.value }}</td>
+                                <td>{{ asset.discovered_by }}</td>
+                                <td>{{ "%.1f"|format(asset.score) }}</td>
+                                <td>{{ asset.timestamp.strftime('%H:%M:%S') }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endfor %}
+        </section>
+    </div>
+</body>
+</html>
