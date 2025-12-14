@@ -5,7 +5,7 @@
 ReconPilot is an AI-powered reconnaissance automation framework designed for penetration testing. It intelligently chains security tools together based on discoveries, prioritizes targets, and provides a real-time TUI dashboard for monitoring scans.
 
 **Key Capabilities:**
-- Intelligent orchestration of 15+ reconnaissance tools (nmap, subfinder, nuclei, etc.)
+- Intelligent orchestration of 15 reconnaissance tools (nmap, subfinder, nuclei, etc.)
 - Asynchronous task execution for parallel scanning
 - Interactive TUI dashboard built with Textual
 - Session management and professional report generation
@@ -148,7 +148,7 @@ When adding new features:
 - httpx - HTTP client for web reconnaissance
 
 ### External Tools
-ReconPilot integrates with 15+ external security tools that must be installed separately:
+ReconPilot integrates with 15 external security tools that must be installed separately:
 - DNS/OSINT: whois, dnsrecon, dnsx
 - Subdomains: subfinder, amass, assetfinder
 - Port Scanning: nmap, masscan, rustscan
