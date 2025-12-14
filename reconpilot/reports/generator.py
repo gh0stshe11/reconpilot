@@ -6,6 +6,8 @@ from typing import Optional
 
 from jinja2 import Environment, FileSystemLoader
 
+from reconpilot import __version__
+
 from reconpilot.config import REPORTS_DIR
 from reconpilot.core.database import Database
 from reconpilot.core.models import ScanSession, Severity
@@ -74,6 +76,7 @@ class ReportGenerator:
     def _generate_json(self, session: ScanSession) -> str:
         """Generate JSON report"""
         data = {
+            "version": __version__,
             "session_id": session.id,
             "target": session.target,
             "started_at": session.started_at.isoformat(),
@@ -140,4 +143,5 @@ class ReportGenerator:
             "duration": duration,
             "generated_at": datetime.now(),
             "severity_enum": Severity,
+            "version": __version__,
         }
